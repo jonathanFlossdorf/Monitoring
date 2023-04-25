@@ -1,3 +1,10 @@
+## Multivariate Procedure with the traditional parametric Hotellings T^2 chart
+## Setup is as described in the paper and analgously to the Bootstrap file
+
+library(qcc)
+
+## requires: simulationStudy.R
+
 mvControlChart_F <- function(measure1, measure2, measure3, train = 1000){
   n <- length(measure1)
   df <- data.frame(measure1, measure2, measure3)
@@ -16,8 +23,8 @@ mvControlChart_F4 <- function(measure1, measure2, measure3, measure4, train = 10
   Hotelling <- mqcc(df[1:train,], newdata = df[-(1:train),], type = "T2.single",
                     confidence.level = 0.99)
   HotellingLim <- Hotelling$violations$beyond.limits
-  falseAlarm <- HotellingLim[HotellingLim < 1001]
-  falseAlarmRate <- length(falseAlarm)/1000
+  falseAlarm <- HotellingLim[HotellingLim > 1001 & HotellingLim < 1050]
+  falseAlarmRate <- length(falseAlarm)/50
   trueAlarm <- c(HotellingLim[HotellingLim >= 1051], 1400)
   ADL <- min(trueAlarm) - 1050
   return(list(fA = falseAlarmRate, ADL = ADL))
@@ -92,8 +99,7 @@ falseAlarm11_F <- data.frame(SBE = c(almvSBE11low_F, almvSBE11medium_F, almvSBE1
                            BDS = c(almvBDS11low_F, almvBDS11medium_F, almvBDS11heavy_F),
                            CDS = c(almvCDS11low_F, almvCDS11medium_F, almvCDS11heavy_F),
                            BCD = c(almvBCD11low_F, almvBCD11medium_F, almvBCD11heavy_F),
-                           FSB = c(almvFSB11low_F, almvFSB11medium_F, almvFSB11heavy_F),
-                           SAL = c(existing11_F$fA[1], existing11_F$fA[2], existing11_F$fA[3]))
+                           FSB = c(almvFSB11low_F, almvFSB11medium_F, almvFSB11heavy_F))
 
 ADL11_F <- data.frame(SBE = c(ADLmvSBE11low_F, ADLmvSBE11medium_F, ADLmvSBE11heavy_F),
                     SDC = c(ADLmvSDC11low_F, ADLmvSDC11medium_F, ADLmvSDC11heavy_F),
@@ -251,8 +257,7 @@ falseAlarm21_F <- data.frame(SBE = c(almvSBE21low_F, almvSBE21medium_F, almvSBE2
                            BDS = c(almvBDS21low_F, almvBDS21medium_F, almvBDS21heavy_F),
                            CDS = c(almvCDS21low_F, almvCDS21medium_F, almvCDS21heavy_F),
                            BCD = c(almvBCD21low_F, almvBCD21medium_F, almvBCD21heavy_F),
-                           FSB = c(almvFSB21low_F, almvFSB21medium_F, almvFSB21heavy_F),
-                           SAL = c(existing21_F$fA[1], existing21_F$fA[2], existing21_F$fA[3]))
+                           FSB = c(almvFSB21low_F, almvFSB21medium_F, almvFSB21heavy_F))
 
 ADL21_F <- data.frame(SBE = c(ADLmvSBE21low_F, ADLmvSBE21medium_F, ADLmvSBE21heavy_F),
                     SDC = c(ADLmvSDC21low_F, ADLmvSDC21medium_F, ADLmvSDC21heavy_F),
@@ -331,8 +336,7 @@ falseAlarm22_F <- data.frame(SBE = c(almvSBE22low_F, almvSBE22medium_F, almvSBE2
                            BDS = c(almvBDS22low_F, almvBDS22medium_F, almvBDS22heavy_F),
                            CDS = c(almvCDS22low_F, almvCDS22medium_F, almvCDS22heavy_F),
                            BCD = c(almvBCD22low_F, almvBCD22medium_F, almvBCD22heavy_F),
-                           FSB = c(almvFSB22low_F, almvFSB22medium_F, almvFSB22heavy_F),
-                           SAL = c(existing22_F$fA[1], existing22_F$fA[2], existing22_F$fA[3]))
+                           FSB = c(almvFSB22low_F, almvFSB22medium_F, almvFSB22heavy_F))
 
 ADL22_F <- data.frame(SBE = c(ADLmvSBE22low_F, ADLmvSBE22medium_F, ADLmvSBE22heavy_F),
                     SDC = c(ADLmvSDC22low_F, ADLmvSDC22medium_F, ADLmvSDC22heavy_F),
