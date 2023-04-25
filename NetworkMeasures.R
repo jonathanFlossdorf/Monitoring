@@ -1,10 +1,13 @@
 ## Calculation of all considered metrics (univariate)
 
-CPMeasures <- function(dynMat, method, refAdj = NULL){
+library(igraph)
+
+## Input: dynMat - time series of adjacency matrices of the dynamic network
+## Output: Extracts the considered network metrics from the dynamic network
+
+CPMeasures <- function(dynMat){
   
-  dynNet <- lapply(dynMat, graph_from_adjacency_matrix, mode = "undirected")
-  if(method == "all"){
-    
+  dynNet <- lapply(dynMat, graph_from_adjacency_matrix, mode = "undirected")  
   ## Adjacency-based
   FrNorm <- unlist(lapply(dynMat, norm, type = "F"))
   twoNorm <- unlist(lapply(dynMat, norm, type = "2"))
@@ -28,5 +31,4 @@ CPMeasures <- function(dynMat, method, refAdj = NULL){
               Density = density
               #ClusterCoef = ClusterCoef, AvPathLength = AvPathLength
               ))
-  }
 }
