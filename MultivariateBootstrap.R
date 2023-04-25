@@ -1,9 +1,15 @@
+## Multivariate Procedure with the Bootstrap Control Chart
+
+## In this file: The simulations for the considered metric sets of the paper. 
+## All other metric sets can be calculated as well by simply changing the input of the corresponding functions.
+
 my.bootstrap <- function(q, m, B){
   bootSample <- replicate(B, sample(q, m, replace = TRUE))
   bootQuantiles <- apply(bootSample, 2, quantile, probs = 0.99, type = 1, na.rm = TRUE)
   return(mean(bootQuantiles))
 }
 
+## input of the three considered metrics
 mvControlChart_BS <- function(measure1, measure2, measure3){
   n <- length(measure1)
   train <- 1000
@@ -21,6 +27,7 @@ mvControlChart_BS <- function(measure1, measure2, measure3){
   return(list(fA = falseAlarmRate, ADL = ADL))
 }
 
+## alternatively with four involved metrics (e.g. for the set of Salmasnia et al (2020))
 mvControlChart_BS4 <- function(measure1, measure2, measure3, measure4){
   n <- length(measure1)
   train <- 1000
@@ -51,7 +58,7 @@ simStudy11_BS <- function(measure1, measure2, measure3){
                                                                  x$Measure113[measure3]))))
 }
 
-
+## SBE set
 mvSBE11_BS <- simStudy11_BS("Spektral", "BetwCent", "EigenMean")
 almvSBE11low_BS <- falseAlarm(evaluation(mvSBE11_BS, "low"))
 almvSBE11medium_BS <- falseAlarm(evaluation(mvSBE11_BS,"medium"))
@@ -60,6 +67,7 @@ ADLmvSBE11low_BS <- ADL(evaluation(mvSBE11_BS, "low"))
 ADLmvSBE11medium_BS <- ADL(evaluation(mvSBE11_BS, "medium"))
 ADLmvSBE11heavy_BS <- ADL(evaluation(mvSBE11_BS, "heavy"))
 
+## SDC set
 mvSDC11_BS <- simStudy11_BS("Spektral", "DegreeMean", "CloCent")
 almvSDC11low_BS <- falseAlarm(evaluation(mvSDC11_BS, "low"))
 almvSDC11medium_BS <- falseAlarm(evaluation(mvSDC11_BS,"medium"))
@@ -68,6 +76,7 @@ ADLmvSDC11low_BS <- ADL(evaluation(mvSDC11_BS, "low"))
 ADLmvSDC11medium_BS <- ADL(evaluation(mvSDC11_BS, "medium"))
 ADLmvSDC11heavy_BS <- ADL(evaluation(mvSDC11_BS, "heavy"))
 
+## BDS set                             
 mvBDS11_BS <- simStudy11_BS("BetwCent", "DegreeCent", "Spektral")
 almvBDS11low_BS <- falseAlarm(evaluation(mvBDS11_BS, "low"))
 almvBDS11medium_BS <- falseAlarm(evaluation(mvBDS11_BS,"medium"))
@@ -76,6 +85,7 @@ ADLmvBDS11low_BS <- ADL(evaluation(mvBDS11_BS, "low"))
 ADLmvBDS11medium_BS <- ADL(evaluation(mvBDS11_BS, "medium"))
 ADLmvBDS11heavy_BS <- ADL(evaluation(mvBDS11_BS, "heavy"))
 
+## CDS set                             
 mvCDS11_BS <- simStudy11_BS("CloMean", "DegreeMean", "Spektral")
 almvCDS11low_BS <- falseAlarm(evaluation(mvCDS11_BS, "low"))
 almvCDS11medium_BS <- falseAlarm(evaluation(mvCDS11_BS,"medium"))
@@ -84,6 +94,7 @@ ADLmvCDS11low_BS <- ADL(evaluation(mvCDS11_BS, "low"))
 ADLmvCDS11medium_BS <- ADL(evaluation(mvCDS11_BS, "medium"))
 ADLmvCDS11heavy_BS <- ADL(evaluation(mvCDS11_BS, "heavy"))
 
+## BCD set                             
 mvBCD11_BS <- simStudy11_BS("BetwCent", "CloCent", "DegreeCent")
 almvBCD11low_BS <- falseAlarm(evaluation(mvBCD11_BS, "low"))
 almvBCD11medium_BS <- falseAlarm(evaluation(mvBCD11_BS,"medium"))
@@ -92,7 +103,7 @@ ADLmvBCD11low_BS <- ADL(evaluation(mvBCD11_BS, "low"))
 ADLmvBCD11medium_BS <- ADL(evaluation(mvBCD11_BS, "medium"))
 ADLmvBCD11heavy_BS <- ADL(evaluation(mvBCD11_BS, "heavy"))
 
-
+## FSB set
 mvFSB11_BS <- simStudy11_BS("Frobenius", "Spektral", "BetwCent")
 almvFSB11low_BS <- falseAlarm(evaluation(mvFSB11_BS, "low"))
 almvFSB11medium_BS <- falseAlarm(evaluation(mvFSB11_BS,"medium"))
@@ -108,8 +119,7 @@ falseAlarm11_BS <- data.frame(SBE = c(almvSBE11low_BS, almvSBE11medium_BS, almvS
                              BDS = c(almvBDS11low_BS, almvBDS11medium_BS, almvBDS11heavy_BS),
                              CDS = c(almvCDS11low_BS, almvCDS11medium_BS, almvCDS11heavy_BS),
                              BCD = c(almvBCD11low_BS, almvBCD11medium_BS, almvBCD11heavy_BS),
-                             FSB = c(almvFSB11low_BS, almvFSB11medium_BS, almvFSB11heavy_BS),
-                             SAL = c(existing11$fA[1], existing11$fA[2], existing11$fA[3]))
+                             FSB = c(almvFSB11low_BS, almvFSB11medium_BS, almvFSB11heavy_BS))
 
 ADL11_BS <- data.frame(SBE = c(ADLmvSBE11low_BS, ADLmvSBE11medium_BS, ADLmvSBE11heavy_BS),
                       SDC = c(ADLmvSDC11low_BS, ADLmvSDC11medium_BS, ADLmvSDC11heavy_BS),
@@ -119,6 +129,7 @@ ADL11_BS <- data.frame(SBE = c(ADLmvSBE11low_BS, ADLmvSBE11medium_BS, ADLmvSBE11
                       FSB = c(ADLmvFSB11low_BS, ADLmvFSB11medium_BS, ADLmvFSB11heavy_BS))
 
 
+## now for LLCs                             
 simStudy12_BS <- function(measure1, measure2, measure3){
   return(list(low = lapply(Sim12, function(x) mvControlChart_BS(x$Measure121[measure1],
                                                              x$Measure121[measure2],
@@ -187,8 +198,7 @@ falseAlarm12_BS <- data.frame(SBE = c(almvSBE12low_BS, almvSBE12medium_BS, almvS
                              BDS = c(almvBDS12low_BS, almvBDS12medium_BS, almvBDS12heavy_BS),
                              CDS = c(almvCDS12low_BS, almvCDS12medium_BS, almvCDS12heavy_BS),
                              BCD = c(almvBCD12low_BS, almvBCD12medium_BS, almvBCD12heavy_BS),
-                             FSB = c(almvFSB12low_BS, almvFSB12medium_BS, almvFSB12heavy_BS),
-                             SAL = c(existing12$fA[1], existing12$fA[2], existing12$fA[3]))
+                             FSB = c(almvFSB12low_BS, almvFSB12medium_BS, almvFSB12heavy_BS))
 
 ADL12_BS <- data.frame(SBE = c(ADLmvSBE12low_BS, ADLmvSBE12medium_BS, ADLmvSBE12heavy_BS),
                       SDC = c(ADLmvSDC12low_BS, ADLmvSDC12medium_BS, ADLmvSDC12heavy_BS),
@@ -198,7 +208,7 @@ ADL12_BS <- data.frame(SBE = c(ADLmvSBE12low_BS, ADLmvSBE12medium_BS, ADLmvSBE12
                       FSB = c(ADLmvFSB12low_BS, ADLmvFSB12medium_BS, ADLmvFSB12heavy_BS))
 
 
-
+## now for GNCs
 simStudy21_BS <- function(measure1, measure2, measure3){
   return(list(low = lapply(Sim21, function(x) mvControlChart_BS(x$Measure211[measure1],
                                                                x$Measure211[measure2],
@@ -267,8 +277,7 @@ falseAlarm21_BS <- data.frame(SBE = c(almvSBE21low_BS, almvSBE21medium_BS, almvS
                              BDS = c(almvBDS21low_BS, almvBDS21medium_BS, almvBDS21heavy_BS),
                              CDS = c(almvCDS21low_BS, almvCDS21medium_BS, almvCDS21heavy_BS),
                              BCD = c(almvBCD21low_BS, almvBCD21medium_BS, almvBCD21heavy_BS),
-                             FSB = c(almvFSB21low_BS, almvFSB21medium_BS, almvFSB21heavy_BS),
-                             SAL = c(existing21$fA[1], existing21$fA[2], existing21$fA[3]))
+                             FSB = c(almvFSB21low_BS, almvFSB21medium_BS, almvFSB21heavy_BS))
 
 ADL21_BS <- data.frame(SBE = c(ADLmvSBE21low_BS, ADLmvSBE21medium_BS, ADLmvSBE21heavy_BS),
                       SDC = c(ADLmvSDC21low_BS, ADLmvSDC21medium_BS, ADLmvSDC21heavy_BS),
@@ -278,7 +287,7 @@ ADL21_BS <- data.frame(SBE = c(ADLmvSBE21low_BS, ADLmvSBE21medium_BS, ADLmvSBE21
                       FSB = c(ADLmvFSB21low_BS, ADLmvFSB21medium_BS, ADLmvFSB21heavy_BS))
 
 
-
+## now for LNCs
 simStudy22_BS <- function(measure1, measure2, measure3){
   return(list(low = lapply(Sim22, function(x) mvControlChart_BS(x$Measure221[measure1],
                                                                x$Measure221[measure2],
@@ -347,8 +356,7 @@ falseAlarm22_BS <- data.frame(SBE = c(almvSBE22low_BS, almvSBE22medium_BS, almvS
                              BDS = c(almvBDS22low_BS, almvBDS22medium_BS, almvBDS22heavy_BS),
                              CDS = c(almvCDS22low_BS, almvCDS22medium_BS, almvCDS22heavy_BS),
                              BCD = c(almvBCD22low_BS, almvBCD22medium_BS, almvBCD22heavy_BS),
-                             FSB = c(almvFSB22low_BS, almvFSB22medium_BS, almvFSB22heavy_BS),
-                             SAL = c(existing22$fA[1], existing22$fA[2], existing22$fA[3]))
+                             FSB = c(almvFSB22low_BS, almvFSB22medium_BS, almvFSB22heavy_BS))
 
 ADL22_BS <- data.frame(SBE = c(ADLmvSBE22low_BS, ADLmvSBE22medium_BS, ADLmvSBE22heavy_BS),
                       SDC = c(ADLmvSDC22low_BS, ADLmvSDC22medium_BS, ADLmvSDC22heavy_BS),
