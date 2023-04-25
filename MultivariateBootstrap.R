@@ -3,6 +3,8 @@
 ## In this file: The simulations for the considered metric sets of the paper. 
 ## All other metric sets can be calculated as well by simply changing the input of the corresponding functions.
 
+## requires: simulationStudy.R
+
 my.bootstrap <- function(q, m, B){
   bootSample <- replicate(B, sample(q, m, replace = TRUE))
   bootQuantiles <- apply(bootSample, 2, quantile, probs = 0.99, type = 1, na.rm = TRUE)
@@ -20,8 +22,8 @@ mvControlChart_BS <- function(measure1, measure2, measure3){
   Hotelling <- mqcc(df[1:train,], newdata = df[-(1:train),], type = "T2.single",
                     limits = c(0, bootQuant))
   HotellingLim <- Hotelling$violations$beyond.limits
-  falseAlarm <- HotellingLim[HotellingLim < 1001]
-  falseAlarmRate <- length(falseAlarm)/1000
+  falseAlarm <- HotellingLim[HotellingLim > 1000 & HotellingLim < 1051]
+  falseAlarmRate <- length(falseAlarm)/50
   trueAlarm <- c(HotellingLim[HotellingLim >= 1051], 1400)
   ADL <- min(trueAlarm) - 1050
   return(list(fA = falseAlarmRate, ADL = ADL))
@@ -38,8 +40,8 @@ mvControlChart_BS4 <- function(measure1, measure2, measure3, measure4){
   Hotelling <- mqcc(df[1:train,], newdata = df[-(1:train),], type = "T2.single",
                     limits = c(0, bootQuant))
   HotellingLim <- Hotelling$violations$beyond.limits
-  falseAlarm <- HotellingLim[HotellingLim < 1001]
-  falseAlarmRate <- length(falseAlarm)/1000
+  falseAlarm <- HotellingLim[HotellingLim > 1000 & HotellingLim < 1051]
+  falseAlarmRate <- length(falseAlarm)/1051
   trueAlarm <- c(HotellingLim[HotellingLim >= 1051], 1400)
   ADL <- min(trueAlarm) - 1050
   return(list(fA = falseAlarmRate, ADL = ADL))
