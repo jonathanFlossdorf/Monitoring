@@ -1,19 +1,20 @@
 library(qcc)
+library(igraph)
 
-### GNCs and LNCs
+##  Functions for generating dynamic network data for change types GNC and LNC
 
-
-### In diesem File gilt die Unabghaengigkeitsannahme. Dementsprechend sind die
-### Simulationen aufgebaut. Die Untersuchung derselben Fragestellung im Falle
-### abhaengiger Netzwerke ist in einem aehnlichen File mittels Markov-Chains zu
-### finden.
-
-
-### Case 2: Hinzukommen neuer Einheiten verändert Netzwerke ueber die Zeit
+## Case 2: Node Changes
 
 ###-----------------------------------------------------------------------------
 
-### Scenario 1: CP durch insgesamten grossen Anstieg neuer Einheiten
+### Scenario 1: GNCs
+
+## Input: Ti - number of simulated time points
+##        CP - time point at which the change occurs
+##        n0 - number of nodes in-control (Phase I)
+##        n1 - number of nodes out-of-control (Phase II)
+##        m - amount of links
+##        Dev - variance factor, 0<= Dev <= 1, controls the potential deviations for the mean node amount n1 and n2 (see also Paper)
 
 Case2Scenario1 <- function(Ti, CP, n0, n1, m, Dev){
   inControl <- replicate(CP, 
@@ -34,9 +35,16 @@ Case2Scenario1 <- function(Ti, CP, n0, n1, m, Dev){
 
 ###-----------------------------------------------------------------------------
 
-### Scenario 2: Hinzukommen weniger zentraler Einheiten, die viel Linkstruktur 
-### beanspruchen, stellt CP dar
-
+### Scenario 2: LNCs
+                   
+## Input: Ti - number of simulated time points
+##        CP - time point at which the change occurs
+##        n0 - number of nodes in-control (Phase I)
+##        p - link probability in-control
+##        pNew - link probability out-of-control
+##        Dev - variance factor, 0<= Dev <= 1, controls the potential deviations for the mean node amount n1 and n2 (see also Paper)
+##        pCent, nCent - see formula in the paper for the setup
+                   
 Case2Scenario2 <- function(Ti, CP, n0, p, pNew, Dev, pCent, nCent){
   inControl <- replicate(CP, 
                          erdos.renyi.game(sample(floor((n0 - n0 * Dev):(n0 + n0 * Dev)), size = 1), 
