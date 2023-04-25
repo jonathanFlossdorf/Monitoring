@@ -1,5 +1,5 @@
 ### This file contains help functions for the evaluation of the simulation
-### study
+### study (to be read-in before the simulation study is performed)
 
 falseAlarm <- function(ev){
   ev <- stack(unlist(ev))
@@ -26,22 +26,4 @@ evaluation <- function(data, situation){
   }
 }
 
-evaluation <- function(data, situation){
-  if(situation == "one"){
-    one <- data$one
-    return(one)
-  }
-  if(situation == "two"){
-    two <- data$two
-    return(two)
-  }
-  if(situation == "three"){
-    three <- data$three
-    return(three)
-  }
-  if(situation == "four"){
-    four <- data$four
-    return(four)
-  }
-}
 
