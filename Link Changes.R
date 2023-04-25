@@ -1,22 +1,20 @@
 library(qcc)
 library(igraph)
 
-## GLCs and LLCs
+##  Functions for generating dynamic network data for change types GLC and LLC
 
-
-### In diesem File gilt die Unabghaengigkeitsannahme. Dementsprechend sind die
-### Simulationen aufgebaut. Die Untersuchung derselben Fragestellung im Falle
-### abhaengiger Netzwerke ist in einem aehnlichen File mittels Markov-Chains zu
-### finden.
-
-
-### Case 1: Netzwerke mit fester Knotenzahl aber ploetzlichem CP ueber die Zeit
+## Case 1: Link Changes
 
 ###-----------------------------------------------------------------------------
 
-### Scenario 1: CP durch insgesamten Anstieg/Abfall der Beziehungshaeufigkeiten
-###             im gesamten Netzwerk 
-###             Simulation durch Uebergang zwischen zwei Erdoes-Renyi-Modellen
+### Scenario 1: GLCs, CP due to increased/decreased communication in the whole network
+
+## Input: Ti - number of simulated time points
+##        CP - time point at which the change occurs
+##        n - number of nodes
+##        p0 - link probability in-control (Phase I)
+##        p1 - link probability out-of-control (Phase II)
+##        inC - if TRUE, the only in-Control networks are simulated
 
 Case1Scenario1 <- function(Ti, CP, n, p0, p1, inC){
   if(inC == TRUE){
@@ -38,12 +36,15 @@ Case1Scenario1 <- function(Ti, CP, n, p0, p1, inC){
 
 ###-----------------------------------------------------------------------------
 
-### Scenario 2: CP durch vereinzelten, starken Anstieg/Abfall der Beziehungs-
-###             haeufigkeiten 
-###             Simulation durch Uebergang von einem Erdoes-Renyi-Modellen
-###             zum selben Modell mit veraenderten Wahrscheinlichkeiten
-###             bei gewissen Links.
-
+### Scenario 2: LLCs
+                   
+## Input: Ti - number of simulated time points
+##        CP - time point at which the change occurs
+##        n - number of nodes
+##        p0 - link probability in-control for all nodes(Phase I)
+##        p1 - link probability out-of-control for some nodes that changed (Phase II)
+##        portion - fraction of nodes that changed their link probability after the change (see also description in the paper)
+##        inC - if TRUE, the only in-Control networks are simulated                   
 
 Case1Scenario2 <- function(Ti, CP, n, p0, p1, portion, inC){
   if(inC == TRUE){
