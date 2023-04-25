@@ -1,7 +1,11 @@
+## Multivariate Procedure with the MEWMA chart
+## Setup is as described in the paper and analgously to the Bootstrap file
+
+library(qcc)
+
+## requires: simulationStudy.R
+
 my.Mewma <- function(data, train, lambda){
-#  hotelling <- mqcc(data[1:train,], type = "T2.single")$statistic
-#  extremes <- which(hotelling > 19)
-#  Matr <- as.matrix(data[-extremes,])
   Matr <- as.matrix(data)
   xMeans <- colMeans(Matr[1:train,])
   newx <- t(apply(Matr, 1, function(x) x - xMeans))
@@ -24,8 +28,8 @@ mvControlChart_MEWMA <- function(measure1, measure2, measure3, lambda = 0.1){
   df <- data.frame(measure1, measure2, measure3)
   q <- my.Mewma(df, train = 1000, lambda = lambda)
   MEWMALim <- q$beyond.limits
-  falseAlarm <- MEWMALim[MEWMALim < 1001]
-  falseAlarmRate <- length(falseAlarm)/1000
+  falseAlarm <- MEWMALim[MEWMALim > 1000 & MEWMALim < 1051]
+  falseAlarmRate <- length(falseAlarm)/50
   trueAlarm <- c(MEWMALim[MEWMALim >= 1051], 1400)
   ADL <- min(trueAlarm) - 1050
   return(list(fA = falseAlarmRate, ADL = ADL))
@@ -35,8 +39,8 @@ mvControlChart_MEWMA4 <- function(measure1, measure2, measure3, measure4, lambda
   df <- data.frame(measure1, measure2, measure3, measure4)
   q <- my.Mewma(df, train = 1000, lambda = lambda)
   MEWMALim <- q$beyond.limits
-  falseAlarm <- MEWMALim[MEWMALim < 1001]
-  falseAlarmRate <- length(falseAlarm)/1000
+  falseAlarm <- MEWMALim[MEWMALim > 1000 & MEWMALim < 1051]
+  falseAlarmRate <- length(falseAlarm)/50
   trueAlarm <- c(MEWMALim[MEWMALim >= 1051], 1400)
   ADL <- min(trueAlarm) - 1050
   return(list(fA = falseAlarmRate, ADL = ADL))
@@ -111,8 +115,7 @@ falseAlarm11_MEWMA <- data.frame(SBE = c(almvSBE11low_MEWMA, almvSBE11medium_MEW
                              BDS = c(almvBDS11low_MEWMA, almvBDS11medium_MEWMA, almvBDS11heavy_MEWMA),
                              CDS = c(almvCDS11low_MEWMA, almvCDS11medium_MEWMA, almvCDS11heavy_MEWMA),
                              BCD = c(almvBCD11low_MEWMA, almvBCD11medium_MEWMA, almvBCD11heavy_MEWMA),
-                             FSB = c(almvFSB11low_MEWMA, almvFSB11medium_MEWMA, almvFSB11heavy_MEWMA),
-                             SAL = c(existing11_MEWMA$fA[1], existing11_MEWMA$fA[2], existing11_MEWMA$fA[3]))
+                             FSB = c(almvFSB11low_MEWMA, almvFSB11medium_MEWMA, almvFSB11heavy_MEWMA))
 
 ADL11_MEWMA <- data.frame(SBE = c(ADLmvSBE11low_MEWMA, ADLmvSBE11medium_MEWMA, ADLmvSBE11heavy_MEWMA),
                       SDC = c(ADLmvSDC11low_MEWMA, ADLmvSDC11medium_MEWMA, ADLmvSDC11heavy_MEWMA),
@@ -189,8 +192,7 @@ falseAlarm12_MEWMA <- data.frame(SBE = c(almvSBE12low_MEWMA, almvSBE12medium_MEW
                              BDS = c(almvBDS12low_MEWMA, almvBDS12medium_MEWMA, almvBDS12heavy_MEWMA),
                              CDS = c(almvCDS12low_MEWMA, almvCDS12medium_MEWMA, almvCDS12heavy_MEWMA),
                              BCD = c(almvBCD12low_MEWMA, almvBCD12medium_MEWMA, almvBCD12heavy_MEWMA),
-                             FSB = c(almvFSB12low_MEWMA, almvFSB12medium_MEWMA, almvFSB12heavy_MEWMA),
-                             SAL = c(existing12_MEWMA$fA[1], existing12_MEWMA$fA[2], existing12_MEWMA$fA[3]))
+                             FSB = c(almvFSB12low_MEWMA, almvFSB12medium_MEWMA, almvFSB12heavy_MEWMA))
 
 ADL12_MEWMA <- data.frame(SBE = c(ADLmvSBE12low_MEWMA, ADLmvSBE12medium_MEWMA, ADLmvSBE12heavy_MEWMA),
                       SDC = c(ADLmvSDC12low_MEWMA, ADLmvSDC12medium_MEWMA, ADLmvSDC12heavy_MEWMA),
@@ -269,8 +271,7 @@ falseAlarm21_MEWMA <- data.frame(SBE = c(almvSBE21low_MEWMA, almvSBE21medium_MEW
                              BDS = c(almvBDS21low_MEWMA, almvBDS21medium_MEWMA, almvBDS21heavy_MEWMA),
                              CDS = c(almvCDS21low_MEWMA, almvCDS21medium_MEWMA, almvCDS21heavy_MEWMA),
                              BCD = c(almvBCD21low_MEWMA, almvBCD21medium_MEWMA, almvBCD21heavy_MEWMA),
-                             FSB = c(almvFSB21low_MEWMA, almvFSB21medium_MEWMA, almvFSB21heavy_MEWMA),
-                             SAL = c(existing21_MEWMA$fA[1], existing21_MEWMA$fA[2], existing21_MEWMA$fA[3]))
+                             FSB = c(almvFSB21low_MEWMA, almvFSB21medium_MEWMA, almvFSB21heavy_MEWMA))
 
 ADL21_MEWMA <- data.frame(SBE = c(ADLmvSBE21low_MEWMA, ADLmvSBE21medium_MEWMA, ADLmvSBE21heavy_MEWMA),
                       SDC = c(ADLmvSDC21low_MEWMA, ADLmvSDC21medium_MEWMA, ADLmvSDC21heavy_MEWMA),
@@ -349,8 +350,7 @@ falseAlarm22_MEWMA <- data.frame(SBE = c(almvSBE22low_MEWMA, almvSBE22medium_MEW
                              BDS = c(almvBDS22low_MEWMA, almvBDS22medium_MEWMA, almvBDS22heavy_MEWMA),
                              CDS = c(almvCDS22low_MEWMA, almvCDS22medium_MEWMA, almvCDS22heavy_MEWMA),
                              BCD = c(almvBCD22low_MEWMA, almvBCD22medium_MEWMA, almvBCD22heavy_MEWMA),
-                             FSB = c(almvFSB22low_MEWMA, almvFSB22medium_MEWMA, almvFSB22heavy_MEWMA),
-                             SAL = c(existing22_MEWMA$fA[1], existing22_MEWMA$fA[2], existing22_MEWMA$fA[3]))
+                             FSB = c(almvFSB22low_MEWMA, almvFSB22medium_MEWMA, almvFSB22heavy_MEWMA))
 
 ADL22_MEWMA <- data.frame(SBE = c(ADLmvSBE22low_MEWMA, ADLmvSBE22medium_MEWMA, ADLmvSBE22heavy_MEWMA),
                       SDC = c(ADLmvSDC22low_MEWMA, ADLmvSDC22medium_MEWMA, ADLmvSDC22heavy_MEWMA),
