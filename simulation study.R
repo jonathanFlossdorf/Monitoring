@@ -1,6 +1,6 @@
-### Durchfuehrung der Simulationsstudie
-### Zun?chst einfache Besipiele, um ein Gefuehl fuer Masszahlen zu bekommen,
-### spaeter umfangreicher.
+## Simulation Study (Univariate performances)
+
+## requires: LinkChanges.R, NodeChanges.R, NetworkMeasures.R, ControlCharts.R, helpers.R 
 
 ###-----------------------------------------------------------------------------
 
@@ -8,10 +8,7 @@
 
 ###-----------------------------------------------------------------------------
 
-### Scenario 1: CP durch Sprung in der Linkw'keit im gesamten Netzwerk
-### Bsp: IT-Sicherheit (Cyber-Attacken), Terroristen-Netzwerke
-
-## Leichte, Mittlere und starke Abweichungen:
+## simulate slight, medium and heavy change intensitites. (setup see paper)
 
 simData11 <- function(){
   ex111 <- Case1Scenario1(Ti = 1400, CP = 1050, n = 50, p0 = 0.4, p1 = 0.43,
@@ -28,13 +25,13 @@ simData11 <- function(){
   Measure111 <- CPMeasures(ex111, method = "all")
   Measure112 <- CPMeasures(ex112, method = "all")
   Measure113 <- CPMeasures(ex113, method = "all")
-  # return(list(Adj111 = ex111, Adj112 = ex112, Adj113 = ex113, Measure111 = Measure111, 
+  # return(list(Adj111 = ex111, Adj112 = ex112, Adj113 = ex113, Measure111 = Measure111, # if adjacency matrices are needed.
   #             Measure112 = Measure112, Measure113 = Measure113))
   return(list(Measure111 = Measure111, Measure112 = Measure112, Measure113 = Measure113))
 }
 
-Sim11 <- replicate(100, simData11(), simplify = FALSE)
-save(Sim11, file = "sim11.RData")
+Sim11 <- replicate(1000, simData11(), simplify = FALSE)
+# save(Sim11, file = "sim11.RData")
 
 simStudy11 <- function(Measure){
   
@@ -131,7 +128,7 @@ simStudy11 <- function(Measure){
   }
 }
 
-
+## Applying the monitroing procedure
 Frobenius11 <- simStudy11("Frobenius")
 alFrobenius11low <- falseAlarm(evaluation(Frobenius11, "low"))
 alFrobenius11medium <- falseAlarm(evaluation(Frobenius11,"medium"))
@@ -270,11 +267,7 @@ ADL11 <- data.frame(Frobenius = c(ADLFrobenius11low, ADLFrobenius11medium, ADLFr
 
 ###-----------------------------------------------------------------------------
 
-### Scenario 2: CP durch Sprung in der Linkw'keit von zentralen Knoten
-### Bsp: Entwicklung von Hierarchien in sozialen Netzwerken
-
-## Leichte, Mittlere und starke Abweichungen (abhg. von Anteil verandernder 
-### Instanzen):
+### Scenario 2: GLCs, analogously to above
 
 simData12 <- function(){
   ex121 <- Case1Scenario2(Ti = 1400, CP = 1050, n = 50, p0 = 0.35, p1 = 0.45, portion = 0.1, inC = FALSE)
@@ -514,9 +507,7 @@ ADL12 <- data.frame(Frobenius = c(ADLFrobenius12low, ADLFrobenius12medium, ADLFr
 
 ###-----------------------------------------------------------------------------
 
-### Scenario 1: CP durch ploetzliches Hinzukommen neuer Einheiten bei gleich 
-### bleibender Link-Anzahl
-### Bsp: Ausnutzung neuer Maschinen in der Produktion, Transportnetzwerke
+### Scenario 1: GNCs, analogously to above
 
 simData21 <- function(){
   ex211 <- Case2Scenario1(Ti = 1400, CP = 1050, n0 = 50, n1 = 55, m = 800, Dev = 0.05)
@@ -762,13 +753,7 @@ ADL21 <- data.frame(Frobenius = c(ADLFrobenius21low, ADLFrobenius21medium, ADLFr
 
 ###-----------------------------------------------------------------------------#
 
-### Scenario 2: CP durch ploetzliches Hinzukommen weniger, aber zentraler neuer
-### Einheiten, die viel Linkstruktur beanspruchen.
-### Bsp: neue Standortzentren  in Supply Chains, 
-###      neue Hotspots in Virus-Netzwerken
-
-## Leichte, Mittlere und starke Anstiege (in Zusammenspiel mit Anzahl neuer 
-## Einheiten):
+### Scenario 2: LLcs, analogously to above
 
 simData22 <- function(){
   ex221 <- Case2Scenario2(Ti = 1400, CP = 1050, n0 = 50, p = 0.4, Dev = 0.15, pCent = 0.6, nCent = 4)
@@ -1006,272 +991,3 @@ ADL22 <- data.frame(Frobenius = c(ADLFrobenius22low, ADLFrobenius22medium, ADLFr
 
 
 
-# ##------------------------------------------------------------------------------
-# ### Scenario 3: Special Cases (Community Changes with multiple Changes)
-# 
-# simData3 <- function(){
-#   ex31 <- Case3Scenario1(Ti = 1400, CP = 1050)
-#   ex32 <- Case3Scenario2(Ti = 1400, CP = 1050)
-#   ex33 <- Case3Scenario3(Ti = 1400, CP = 1050)
-#   ex34 <- Case3Scenario4(Ti = 1400, CP = 1050)
-#   Measure31 <- CPMeasures(ex31, method = "all")
-#   Measure32 <- CPMeasures(ex32, method = "all")
-#   Measure33 <- CPMeasures(ex33, method = "all")
-#   Measure34 <- CPMeasures(ex34, method = "all")
-#   return(list(Measure31 = Measure31, Measure32 = Measure32, 
-#               Measure33 = Measure33, Mesure34 = Measure34))
-# }
-# 
-# Sim3 <- replicate(100, simData3(), simplify = FALSE)
-# 
-# 
-# simStudy3 <- function(Measure){
-#   
-#   ## Frobeniusnorm
-#   if(Measure == "Frobenius"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$Frobenius)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$Frobenius)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$Frobenius)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$Frobenius))))
-#   }
-#   
-#   
-#   ## 2-Norm
-#   if(Measure == "twoNorm"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$Spektral)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$Spektral)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$Spektral)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$Spektral))))
-#   }
-#   
-#   
-#   
-#   ## Closeness-Mean
-#   if(Measure == "CloMean"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$CloMean)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$CloMean)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$CloMean)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$CloMean))))
-#   }
-#   
-#   
-#   ## Closeness-Centrality
-#   if(Measure == "CloCent"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$CloCent)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$CloCent)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$CloCent)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$CloCent))))
-#   }
-#   
-#   ## Beetweeness-Mean
-#   if(Measure == "BetwMean"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$BetwMean)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$BetwMean)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$BetwMean)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$BetwMean))))
-#   }
-#   
-#   
-#   ## Beetweeness-Centrality
-#   if(Measure == "BetwCent"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$BetwCent)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$BetwCent)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$BetwCent)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$BetwCent))))
-#   }
-#   
-#   
-#   ## Degree-Mean
-#   if(Measure == "DegreeMean"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$DegreeMean)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$DegreeMean)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$DegreeMean)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$DegreeMean))))
-#   }
-#   
-#   
-#   ## Degree-Centrality
-#   if(Measure == "DegreeCent"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$DegreeCent)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$DegreeCent)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$DegreeCent)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$DegreeCent))))
-#   }
-#   
-#   ## Eigen-Mean
-#   if(Measure == "EigenMean"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$EigenMean)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$EigenMean)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$EigenMean)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$EigenMean))))
-#   }
-#   
-#   
-#   ## Cluster Coefficient
-#   if(Measure == "ClusterCoef"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$ClusterCoef)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$ClusterCoef)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$ClusterCoef)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$ClusterCoef))))
-#   }
-#   
-#   
-#   ## Average Path Length
-#   if(Measure == "AvPathLength"){
-#     return(list(one = lapply(Sim3, function(x) controlCharts(x$Measure31$AvPathLength)),
-#                 two = lapply(Sim3, function(x) controlCharts(x$Measure32$AvPathLength)),
-#                 three = lapply(Sim3, function(x) controlCharts(x$Measure33$AvPathLength)),
-#                 four = lapply(Sim3, function(x) controlCharts(x$Mesure34$AvPathLength))))
-#   }
-# 
-# }
-# 
-# 
-# Frobenius3 <- simStudy3("Frobenius")
-# alFrobenius31 <- falseAlarm(evaluation(Frobenius3, "one"))
-# alFrobenius32 <- falseAlarm(evaluation(Frobenius3,"two"))
-# alFrobenius33 <- falseAlarm(evaluation(Frobenius3, "three"))
-# alFrobenius34 <- falseAlarm(evaluation(Frobenius3, "four"))
-# ADLFrobenius31 <- ADL(evaluation(Frobenius3, "one"))
-# ADLFrobenius32 <- ADL(evaluation(Frobenius3, "two"))
-# ADLFrobenius33 <- ADL(evaluation(Frobenius3, "three"))
-# ADLFrobenius34 <- ADL(evaluation(Frobenius3, "four"))
-# 
-# 
-# 
-# twoNorm3 <- simStudy3("twoNorm")
-# altwoNorm31 <- falseAlarm(evaluation(twoNorm3, "one"))
-# altwoNorm32 <- falseAlarm(evaluation(twoNorm3,"two"))
-# altwoNorm33 <- falseAlarm(evaluation(twoNorm3, "three"))
-# altwoNorm34 <- falseAlarm(evaluation(twoNorm3, "four"))
-# ADLtwoNorm31 <- ADL(evaluation(twoNorm3, "one"))
-# ADLtwoNorm32 <- ADL(evaluation(twoNorm3, "two"))
-# ADLtwoNorm33 <- ADL(evaluation(twoNorm3, "three"))
-# ADLtwoNorm34 <- ADL(evaluation(twoNorm3, "four"))
-# 
-# 
-# 
-# CloMean3 <- simStudy3("CloMean")
-# alCloMean31 <- falseAlarm(evaluation(CloMean3, "one"))
-# alCloMean32 <- falseAlarm(evaluation(CloMean3,"two"))
-# alCloMean33 <- falseAlarm(evaluation(CloMean3, "three"))
-# alCloMean34 <- falseAlarm(evaluation(CloMean3, "four"))
-# ADLCloMean31 <- ADL(evaluation(CloMean3, "one"))
-# ADLCloMean32 <- ADL(evaluation(CloMean3, "two"))
-# ADLCloMean33 <- ADL(evaluation(CloMean3, "three"))
-# ADLCloMean34 <- ADL(evaluation(CloMean3, "four"))
-# 
-# 
-# CloCent3 <- simStudy3("CloCent")
-# alCloCent31 <- falseAlarm(evaluation(CloCent3, "one"))
-# alCloCent32 <- falseAlarm(evaluation(CloCent3,"two"))
-# alCloCent33 <- falseAlarm(evaluation(CloCent3, "three"))
-# alCloCent34 <- falseAlarm(evaluation(CloCent3, "four"))
-# ADLCloCent31 <- ADL(evaluation(CloCent3, "one"))
-# ADLCloCent32 <- ADL(evaluation(CloCent3, "two"))
-# ADLCloCent33 <- ADL(evaluation(CloCent3, "three"))
-# ADLCloCent34 <- ADL(evaluation(CloCent3, "four"))
-# 
-# 
-# 
-# BetwMean3 <- simStudy3("BetwMean")
-# alBetwMean31 <- falseAlarm(evaluation(BetwMean3, "one"))
-# alBetwMean32 <- falseAlarm(evaluation(BetwMean3,"two"))
-# alBetwMean33 <- falseAlarm(evaluation(BetwMean3, "three"))
-# alBetwMean34 <- falseAlarm(evaluation(BetwMean3, "four"))
-# ADLBetwMean31 <- ADL(evaluation(BetwMean3, "one"))
-# ADLBetwMean32 <- ADL(evaluation(BetwMean3, "two"))
-# ADLBetwMean33 <- ADL(evaluation(BetwMean3, "three"))
-# ADLBetwMean34 <- ADL(evaluation(BetwMean3, "four"))
-# 
-# 
-# BetwCent3 <- simStudy3("BetwCent")
-# alBetwCent31 <- falseAlarm(evaluation(BetwCent3, "one"))
-# alBetwCent32 <- falseAlarm(evaluation(BetwCent3,"two"))
-# alBetwCent33 <- falseAlarm(evaluation(BetwCent3, "three"))
-# alBetwCent34 <- falseAlarm(evaluation(BetwCent3, "four"))
-# ADLBetwCent31 <- ADL(evaluation(BetwCent3, "one"))
-# ADLBetwCent32 <- ADL(evaluation(BetwCent3, "two"))
-# ADLBetwCent33 <- ADL(evaluation(BetwCent3, "three"))
-# ADLBetwCent34 <- ADL(evaluation(BetwCent3, "four"))
-# 
-# 
-# DegreeMean3 <- simStudy3("DegreeMean")
-# alDegreeMean31 <- falseAlarm(evaluation(DegreeMean3, "one"))
-# alDegreeMean32 <- falseAlarm(evaluation(DegreeMean3,"two"))
-# alDegreeMean33 <- falseAlarm(evaluation(DegreeMean3, "three"))
-# alDegreeMean34 <- falseAlarm(evaluation(DegreeMean3, "four"))
-# ADLDegreeMean31 <- ADL(evaluation(DegreeMean3, "one"))
-# ADLDegreeMean32 <- ADL(evaluation(DegreeMean3, "two"))
-# ADLDegreeMean33 <- ADL(evaluation(DegreeMean3, "three"))
-# ADLDegreeMean34 <- ADL(evaluation(DegreeMean3, "four"))
-# 
-# 
-# DegreeCent3 <- simStudy3("DegreeCent")
-# alDegreeCent31 <- falseAlarm(evaluation(DegreeCent3, "one"))
-# alDegreeCent32 <- falseAlarm(evaluation(DegreeCent3,"two"))
-# alDegreeCent33 <- falseAlarm(evaluation(DegreeCent3, "three"))
-# alDegreeCent34 <- falseAlarm(evaluation(DegreeCent3, "four"))
-# ADLDegreeCent31 <- ADL(evaluation(DegreeCent3, "one"))
-# ADLDegreeCent32 <- ADL(evaluation(DegreeCent3, "two"))
-# ADLDegreeCent33 <- ADL(evaluation(DegreeCent3, "three"))
-# ADLDegreeCent34 <- ADL(evaluation(DegreeCent3, "four"))
-# 
-# 
-# EigenMean3 <- simStudy3("EigenMean")
-# alEigenMean31 <- falseAlarm(evaluation(EigenMean3, "one"))
-# alEigenMean32 <- falseAlarm(evaluation(EigenMean3,"two"))
-# alEigenMean33 <- falseAlarm(evaluation(EigenMean3, "three"))
-# alEigenMean34 <- falseAlarm(evaluation(EigenMean3, "four"))
-# ADLEigenMean31 <- ADL(evaluation(EigenMean3, "one"))
-# ADLEigenMean32 <- ADL(evaluation(EigenMean3, "two"))
-# ADLEigenMean33 <- ADL(evaluation(EigenMean3, "three"))
-# ADLEigenMean34 <- ADL(evaluation(EigenMean3, "four"))
-# 
-# 
-# ClusterCoef3 <- simStudy3("ClusterCoef")
-# alClusterCoef31 <- falseAlarm(evaluation(ClusterCoef3, "one"))
-# alClusterCoef32 <- falseAlarm(evaluation(ClusterCoef3,"two"))
-# alClusterCoef33 <- falseAlarm(evaluation(ClusterCoef3, "three"))
-# alClusterCoef34 <- falseAlarm(evaluation(ClusterCoef3, "four"))
-# ADLClusterCoef31 <- ADL(evaluation(ClusterCoef3, "one"))
-# ADLClusterCoef32 <- ADL(evaluation(ClusterCoef3, "two"))
-# ADLClusterCoef33 <- ADL(evaluation(ClusterCoef3, "three"))
-# ADLClusterCoef34 <- ADL(evaluation(ClusterCoef3, "four"))
-# 
-# 
-# AvPathLength3 <- simStudy3("AvPathLength")
-# alAvPathLength31 <- falseAlarm(evaluation(AvPathLength3, "one"))
-# alAvPathLength32 <- falseAlarm(evaluation(AvPathLength3,"two"))
-# alAvPathLength33 <- falseAlarm(evaluation(AvPathLength3, "three"))
-# alAvPathLength34 <- falseAlarm(evaluation(AvPathLength3, "four"))
-# ADLAvPathLength31 <- ADL(evaluation(AvPathLength3, "one"))
-# ADLAvPathLength32 <- ADL(evaluation(AvPathLength3, "two"))
-# ADLAvPathLength33 <- ADL(evaluation(AvPathLength3, "three"))
-# ADLAvPathLegth34 <- ADL(evaluation(AvPathLength3, "four"))
-# 
-# 
-# 
-# falseAlarm3 <- data.frame(Frobenius = c(alFrobenius31, alFrobenius32, alFrobenius33, alFrobenius34),
-#                            twoNorm = c(altwoNorm31, altwoNorm32, altwoNorm33, altwoNorm34),
-#                            CloMean = c(alCloMean31, alCloMean32, alCloMean33, alCloMean34),
-#                            CloCent = c(alCloCent31, alCloCent32, alCloCent33, alCloCent34),
-#                            BetwMean = c(alBetwMean31, alBetwMean32, alBetwMean33, alBetwMean34),
-#                            BetwCent = c(alBetwCent31, alBetwCent32, alBetwCent33, alBetwCent34),
-#                            DegreeMean = c(alDegreeMean31, alDegreeMean32, alDegreeMean33, alDegreeMean34),
-#                            DegreeCent = c(alDegreeCent31, alDegreeCent32, alDegreeCent33, alDegreeCent34),
-#                            EigenMean = c(alEigenMean31, alEigenMean32, alEigenMean33, alEigenMean34),
-#                            ClusterCoef = c(alClusterCoef31, alClusterCoef32, alClusterCoef33, alClusterCoef34),
-#                            AvPathLength = c(alAvPathLength31, alAvPathLength32, alAvPathLength33, alAvPathLength34))
-# 
-# ADL3 <- data.frame(Frobenius = c(ADLFrobenius31, ADLFrobenius32, ADLFrobenius33, ADLFrobenius34),
-#                     twoNorm = c(ADLtwoNorm31, ADLtwoNorm32, ADLtwoNorm33, ADLtwoNorm34),
-#                     CloMean = c(ADLCloMean31, ADLCloMean32, ADLCloMean33, ADLCloMean34),
-#                     CloCent = c(ADLCloCent31, ADLCloCent32, ADLCloCent33, ADLCloCent34),
-#                     BetwMean = c(ADLBetwMean31, ADLBetwMean32, ADLBetwMean33, ADLBetwMean34),
-#                     BetwCent = c(ADLBetwCent31, ADLBetwCent32, ADLBetwCent33, ADLBetwCent34),
-#                     DegreeMean = c(ADLDegreeMean31, ADLDegreeMean32, ADLDegreeMean33, ADLDegreeMean34),
-#                     DegreeCent = c(ADLDegreeCent31, ADLDegreeCent32, ADLDegreeCent33, ADLDegreeCent34),
-#                     EigenMean = c(ADLEigenMean31, ADLEigenMean32, ADLEigenMean33, ADLEigenMean34),
-#                     ClusterCoef = c(ADLClusterCoef31, ADLClusterCoef32, ADLClusterCoef33, ADLClusterCoef34),
-#                     AvPathLength = c(ADLAvPathLength31, ADLAvPathLength32, ADLAvPathLength33, ADLAvPathLegth34))
