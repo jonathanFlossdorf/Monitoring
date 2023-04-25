@@ -1,5 +1,5 @@
 # NetworkMonitoring
-Code for the simulation study of the metric-based multivariate monitoring strategies presented in Flossdorf et al. (2023). For all details see the instructions and the description in the paper
+Code for the simulation study of the metric-based multivariate monitoring strategies presented in Flossdorf et al. (2023). For all details see the instructions and the description in the paper "Online monitoring of dynamic networks using flexible multivariate control charts"
 
 # Short Overview of the files:
 LinkChanges.R - contains data generating functions for dynamic networks with link changes (GLC, LLC)
