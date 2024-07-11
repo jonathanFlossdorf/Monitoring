@@ -11,8 +11,8 @@ mvControlChart_F <- function(measure1, measure2, measure3, train = 1000){
   Hotelling <- mqcc(df[1:train,], newdata = df[-(1:train),], type = "T2.single",
                     confidence.level = 0.99)
   HotellingLim <- Hotelling$violations$beyond.limits
-  falseAlarm <- HotellingLim[HotellingLim < 1001]
-  falseAlarmRate <- length(falseAlarm)/1000
+  falseAlarm <- HotellingLim[HotellingLim > 1001 & HotellingLim < 1050]
+  falseAlarmRate <- length(falseAlarm)/50
   trueAlarm <- c(HotellingLim[HotellingLim >= 1051], 1400)
   ADL <- min(trueAlarm) - 1050
   return(list(fA = falseAlarmRate, ADL = ADL))
